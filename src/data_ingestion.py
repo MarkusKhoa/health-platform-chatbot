@@ -52,4 +52,4 @@ def indexing_builders(nodes):
         vector_index.set_index_id("vector")
         storage_context.persist(INDEX_STORAGE_PATH)
     
-    return storage_context
+    return storage_context, vector_index
