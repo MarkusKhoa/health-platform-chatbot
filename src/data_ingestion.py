@@ -8,9 +8,16 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
 from config import STORAGE_PATH, CACHE_FILE_PATH, INDEX_STORAGE_PATH
 from prompts import SUMMARY_PROMPT
+from dotenv import load_dotenv
 
-import openai
 import os
+
+load_dotenv()
+
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is not set")
+
 
 def ingest_data():
     docs = SimpleDirectoryReader(input_files=STORAGE_PATH,
@@ -30,7 +37,7 @@ def ingest_data():
         transformations=[
             TokenTextSplitter(chunk_size=500, chunk_overlap=20),
             SummaryExtractor(summaries=['self'], prompt_template = SUMMARY_PROMPT),
-            OpenAIEmbedding()
+            OpenAIEmbedding(api_key=OPENAI_API_KEY)
         ], cache = ingestion_cache)
     
     nodes = ingestion_pipeline.run(show_progress = True,
@@ -44,7 +51,7 @@ def indexing_builders(nodes):
         storage_context = StorageContext.from_defaults(persist_dir=INDEX_STORAGE_PATH)
         vector_index = load_index_from_storage (storage_context, index_id="vector")
         print ("Indices storage loaded successfully.")
-    except:
+    except Exception as e:
         print("Indices storage is not available. Running from scratch.")
         storage_context = StorageContext.from_defaults()
         vector_index = VectorStoreIndex(nodes, storage_context=storage_context,
@@ -53,3 +60,7 @@ def indexing_builders(nodes):
         storage_context.persist(INDEX_STORAGE_PATH)
     
     return storage_context, vector_index
+
+if __name__ == "__main__":
+    nodes = ingest_data()
+    storage_context, vector_index = indexing_builders(nodes)
