@@ -1,19 +1,27 @@
 [tool.poetry]
-name = "fastapi llama-index==0-11-4 plotly==5-24-0 streamlit==1-38-0 docx2txt==0-8"
+name = "ehr-chatbot"
 version = "0.1.0"
-description = "environment for mental health chatbot"
-authors = ["MarkusKhoa <dangkhoa20006@gmail.com>"]
+description = ""
+authors = ["Quyen Pham Khac <phamkhacquyen1996@gmail.com>"]
 readme = "README.md"
-packages = [{include = "fastapi llama_index==0"}]
+packages = [{include = "ehr_chatbot"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
-pathlib = "^1.0.1"
-python-dotenv = "^1.0.1"
+python =  ">=3.11,<3.13"
+langchain = "^0.2.14"
+langgraph = "^0.2.10"
+langchain-community = "^0.2.12"
+uvicorn = "^0.30.6"
+fastapi = {extras = ["all"], version = "^0.112.1"}
+crewai = {extras = ["tools"], version = "^0.51.1"}
+langgraph-checkpoint-sqlite = "^1.0.0"
+langgraph-checkpoint-postgres = "^1.0.3"
+pyautogen = "^0.2.35"
+gradio = "^4.42.0"
+langchain-groq = "^0.1.0"
+keyboard = "^0.13.5"
+loguru = "^0.7.2"
 
-[tool.poetry.group.dev.dependencies]
-fastapi = "^0.115.0"
-llama-index = "0.11.4"
 
 [build-system]
 requires = ["poetry-core"]
