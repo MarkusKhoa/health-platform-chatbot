@@ -35,7 +35,8 @@ def chat_search_agent(message):
     }
     response = ehr_chatbot.invoke(
         {"messages": [("human", message)]}, config=config)
-    answer = response["messages"][-1].content
+    # answer = response["messages"][-1].content
+    combined_answer = " ".join(msg.content for msg in response["messages"])
     return CommonResponse[str](
-        data=answer
+        data=combined_answer
     )
